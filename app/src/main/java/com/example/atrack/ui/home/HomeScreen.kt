@@ -2,6 +2,7 @@ package com.example.atrack.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -101,27 +102,44 @@ private fun HomeBody(
         modifier = modifier
     ) {
         if (itemList.isEmpty()) {
-            Image(
-                painter = painterResource(id = R.drawable.sad_face),
-                contentDescription = "Sad Face",
-                modifier=modifier
-                    .size(200.dp)
-            )
-            Text(
-                text = stringResource(R.string.no_item_description),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        } else {
+            if (isSystemInDarkTheme()) {
+                Image(
+                    painter = painterResource(id = R.drawable.sad_face),
+                    contentDescription = "Sad Face",
+                    modifier = modifier
+                        .size(200.dp)
+                )
+                Text(
+                    text = stringResource(R.string.no_item_description),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.sad_face_white),
+                    contentDescription = "Sad Face",
+                    modifier = modifier
+                        .size(200.dp)
+                )
+                Text(
+                    text = stringResource(R.string.no_item_description),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+            }
+        }
+        else {
             InventoryList(
                 itemList = itemList,
                 onItemClick = { onItemClick(it.id) },
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             )
         }
-    }
+        }
 }
 
 @Composable

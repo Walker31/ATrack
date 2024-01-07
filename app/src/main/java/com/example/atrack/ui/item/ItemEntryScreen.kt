@@ -113,7 +113,7 @@ fun ItemInputForm(
         OutlinedTextField(
             value = itemDetails.subName,
             onValueChange = { onValueChange(itemDetails.copy(subName = it)) },
-            label = { Text(stringResource(R.string.item_name_req)) },
+            label = { Text(stringResource(R.string.SubName)) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -126,7 +126,7 @@ fun ItemInputForm(
         OutlinedTextField(
             value = itemDetails.subCode,
             onValueChange = { onValueChange(itemDetails.copy(subCode = it)) },
-            label = { Text(stringResource(R.string.item_price_req)) },
+            label = { Text(stringResource(R.string.SubCode)) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -141,7 +141,7 @@ fun ItemInputForm(
             value = itemDetails.nPresent,
             onValueChange = { onValueChange(itemDetails.copy(nPresent = it.toString())) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            label = { Text(stringResource(R.string.quantity_req)) },
+            label = { Text(stringResource(R.string.nPresent)) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,

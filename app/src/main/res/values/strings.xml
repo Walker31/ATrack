@@ -23,5 +23,6 @@
     <string name="SubName">Subject Name:</string>
     <string name="SubCode">Subject Code:</string>
     <string name="nTotal">Total Classes:</string>
+    <string name="nPresent">Classes present till now:</string>
 
 </resources>
