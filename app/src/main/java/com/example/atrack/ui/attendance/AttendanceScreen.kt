@@ -90,7 +90,7 @@ fun AttendanceTile(
     modifier: Modifier=Modifier){
 
     Column(
-        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium))){
+        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium))) {
 
 
         TileDetails(
@@ -102,7 +102,7 @@ fun AttendanceTile(
             Button(
                 onClick = { },
                 shape = MaterialTheme.shapes.small,
-                modifier=modifier
+                modifier = modifier
                     .padding(dimensionResource(id = R.dimen.padding_medium))
             ) {
                 Text("Present")
@@ -111,13 +111,12 @@ fun AttendanceTile(
             ElevatedButton(
                 onClick = { },
                 shape = MaterialTheme.shapes.small,
-                modifier=modifier
+                modifier = modifier
                     .padding(dimensionResource(id = R.dimen.padding_medium))
             ) {
                 Text("Absent")
             }
         }
-
     }
 }
 
@@ -143,7 +142,7 @@ contentColor = MaterialTheme.colorScheme.onPrimaryContainer
             modifier = Modifier.padding(
                 horizontal = dimensionResource(
                     id = R.dimen
-                        .padding_medium
+                        .padding_small
                 )
             )
         )
@@ -153,7 +152,7 @@ contentColor = MaterialTheme.colorScheme.onPrimaryContainer
             modifier = Modifier.padding(
                 horizontal = dimensionResource(
                     id = R.dimen
-                        .padding_medium
+                        .padding_small
                 )
             )
         )
@@ -163,7 +162,7 @@ contentColor = MaterialTheme.colorScheme.onPrimaryContainer
             modifier = Modifier.padding(
                 horizontal = dimensionResource(
                     id = R.dimen
-                        .padding_medium
+                        .padding_small
                 )
             )
         )
@@ -224,6 +223,7 @@ fun AttendancePreview() {
     ATrackTheme(darkTheme = true) {
         AttendanceTile(
             ItemUiState(
-            itemDetails = ItemDetails(1, "Electronics", "EEPC10", "10","4")
-        ))}
+            itemDetails = ItemDetails(1, "Electronics", "EEPC10", "10","4"))
+        )
+    }
 }

@@ -1,6 +1,5 @@
 package com.example.atrack.ui.item
 
-import android.icu.util.Currency
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,8 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -29,7 +33,6 @@ import com.example.atrack.ui.AppViewModelProvider
 import com.example.atrack.ui.navigation.NavigationDestination
 import com.example.atrack.ui.theme.ATrackTheme
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 object ItemEntryDestination : NavigationDestination {
     override val route = "item_entry"
@@ -119,6 +122,9 @@ fun ItemInputForm(
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
             ),
+            leadingIcon = {
+                Icon( imageVector=Icons.Filled.Person,
+                    contentDescription="")} ,
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
@@ -132,7 +138,9 @@ fun ItemInputForm(
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
             ),
-            leadingIcon = { Text(Currency.getInstance(Locale.getDefault()).symbol) },
+            leadingIcon = {
+                Icon( imageVector=Icons.Filled.Send,
+                          contentDescription="")} ,
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
@@ -147,6 +155,9 @@ fun ItemInputForm(
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
             ),
+            leadingIcon = {
+                Icon( imageVector=Icons.Rounded.Place,
+                    contentDescription="")} ,
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
@@ -160,7 +171,7 @@ fun ItemInputForm(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun ItemEntryScreenPreview() {
     ATrackTheme {
