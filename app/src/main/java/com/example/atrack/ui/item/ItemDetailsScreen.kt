@@ -56,6 +56,7 @@ object ItemDetailsDestination : NavigationDestination {
 @Composable
 fun ItemDetailsScreen(
     navigateToEditItem: (Int) -> Unit,
+    navigateToAddAttendance:(Int)->Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ItemDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -85,7 +86,7 @@ fun ItemDetailsScreen(
     ) { innerPadding ->
         ItemDetailsBody(
             itemDetailsUiState = uiState.value,
-            onSellItem = { viewModel.reduceQuantityByOne() },
+            onAdd = { navigateToAddAttendance(uiState.value.itemDetails.id)},
             onDelete = {
                 coroutineScope.launch {
                     viewModel.deleteItem()
@@ -102,7 +103,7 @@ fun ItemDetailsScreen(
 @Composable
 private fun ItemDetailsBody(
     itemDetailsUiState: ItemDetailsUiState,
-    onSellItem: () -> Unit,
+    onAdd: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -115,10 +116,9 @@ private fun ItemDetailsBody(
             item = itemDetailsUiState.itemDetails.toItem(), modifier = Modifier.fillMaxWidth()
         )
         Button(
-            onClick = onSellItem,
+            onClick = onAdd,
             modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.small,
-            enabled = !itemDetailsUiState.outOfStock
+            shape = MaterialTheme.shapes.small
         ) {
             Text(stringResource(R.string.sell))
         }
@@ -231,6 +231,6 @@ fun ItemDetailsScreenPreview() {
     ATrackTheme {
         ItemDetailsBody(ItemDetailsUiState(
             outOfStock = true, itemDetails = ItemDetails(1, "Electronics", "EEPC10", "10","4")
-        ), onSellItem = {}, onDelete = {})
+        ), onAdd = {}, onDelete = {})
     }
 }

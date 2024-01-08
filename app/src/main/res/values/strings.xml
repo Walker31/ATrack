@@ -24,5 +24,7 @@
     <string name="SubCode">Subject Code:</string>
     <string name="nTotal">Total Classes:</string>
     <string name="nPresent">Classes present till now:</string>
+    <string name="submit_attendance">Submit Attendance</string>
+
 
 </resources>

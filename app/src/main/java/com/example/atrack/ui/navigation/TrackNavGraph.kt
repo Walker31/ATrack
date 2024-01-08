@@ -8,6 +8,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.atrack.ui.attendance.AttendanceDestination
+import com.example.atrack.ui.attendance.AttendanceScreen
 import com.example.atrack.ui.home.HomeDestination
 import com.example.atrack.ui.home.HomeScreen
 import com.example.atrack.ui.item.ItemDetailsDestination
@@ -16,7 +18,6 @@ import com.example.atrack.ui.item.ItemEditDestination
 import com.example.atrack.ui.item.ItemEditScreen
 import com.example.atrack.ui.item.ItemEntryDestination
 import com.example.atrack.ui.item.ItemEntryScreen
-
 @Composable
 fun TrackNavHost(navController: NavHostController,
                   modifier: Modifier = Modifier,
@@ -48,6 +49,7 @@ fun TrackNavHost(navController: NavHostController,
         ) {
             ItemDetailsScreen(
                 navigateToEditItem = { navController.navigate("${ItemEditDestination.route}/$it") },
+                navigateToAddAttendance = { navController.navigate("${AttendanceDestination.route}/$it") },
                 navigateBack = { navController.navigateUp() }
             )
         }
@@ -58,6 +60,17 @@ fun TrackNavHost(navController: NavHostController,
             })
         ) {
             ItemEditScreen(
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() }
+            )
+        }
+        composable(
+            route = AttendanceDestination.routeWithArgs,
+            arguments = listOf(navArgument(AttendanceDestination.itemIdArg) {
+                type = NavType.IntType
+            })
+        ) {
+            AttendanceScreen(
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() }
             )

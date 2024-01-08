@@ -1,12 +1,12 @@
 package com.example.atrack.ui
 
-import android.app.Application
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.atrack.TrackApplication
+import com.example.atrack.ui.attendance.AttendanceViewModel
 import com.example.atrack.ui.home.HomeViewModel
 import com.example.atrack.ui.item.ItemDetailsViewModel
 import com.example.atrack.ui.item.ItemEditViewModel
@@ -37,6 +37,12 @@ object AppViewModelProvider {
         // Initializer for HomeViewModel
         initializer {
             HomeViewModel(inventoryApplication().container.itemsRepository)
+        }
+
+        initializer {
+            AttendanceViewModel(
+                this.createSavedStateHandle(),
+                inventoryApplication().container.itemsRepository)
         }
     }
 }
