@@ -7,7 +7,13 @@ class OfflineSubjectsRepository(private val itemDao: SubjectDao): SubjectsReposi
 
     override fun getItemStream(id: Int): Flow<Subject?> = itemDao.getItem(id)
 
+    override fun getAttendanceCount(subName: String): Int = itemDao.getAttendanceCount(subName)
+
+    override fun getDateCount(subName: String): Int =itemDao.getDateCount(subName)
+
     override suspend fun insertItem(item: Subject) = itemDao.insert(item)
+
+    override suspend fun insertDate(item: AttendanceTrack) =itemDao.insertDate(item)
 
     override suspend fun deleteItem(item: Subject) = itemDao.delete(item)
 

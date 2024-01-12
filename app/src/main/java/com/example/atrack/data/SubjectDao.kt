@@ -13,8 +13,17 @@ interface SubjectDao{
     @Query("SELECT * from items ORDER BY subName ASC")
     fun getAllItems(): Flow<List<Subject>>
 
+    @Query("SELECT count(attendance) from AttendanceTrack where attendance is true and subName = :subName")
+    fun getAttendanceCount(subName: String): Int
+
+    @Query("SELECT count(date) from AttendanceTrack where subName= :subName")
+    fun getDateCount(subName: String):Int
+
     @Query("SELECT * from items WHERE id = :id")
     fun getItem(id: Int): Flow<Subject>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertDate(item: AttendanceTrack)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(item: Subject)

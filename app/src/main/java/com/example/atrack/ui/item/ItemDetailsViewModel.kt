@@ -23,7 +23,7 @@ class ItemDetailsViewModel(
         itemsRepository.getItemStream(itemId)
             .filterNotNull()
             .map {
-                ItemDetailsUiState(outOfStock = it.nPresent <= 0, itemDetails = it.toItemDetails())
+                ItemDetailsUiState( itemDetails = it.toItemDetails())
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
@@ -53,6 +53,5 @@ class ItemDetailsViewModel(
  * UI state for ItemDetailsScreen
  */
 data class ItemDetailsUiState(
-    val outOfStock: Boolean = true,
     val itemDetails: ItemDetails =ItemDetails()
 )

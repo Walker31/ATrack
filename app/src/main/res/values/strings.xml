@@ -13,18 +13,13 @@
     <string name="item_price_req">Item Price*</string>
     <string name="no">No</string>
     <string name="price">Price</string>
-    <string name="quantity_in_stock">Quantity in stock</string>
-    <string name="in_stock">%d in stock</string>
-    <string name="quantity_req">Quantity in Stock*</string>
     <string name="save_action">Save</string>
-    <string name="sell">Sell</string>
     <string name="yes">Yes</string>
     <string name="required_fields">*required fields</string>
     <string name="SubName">Subject Name:</string>
     <string name="SubCode">Subject Code:</string>
     <string name="nTotal">Total Classes:</string>
     <string name="nPresent">Classes present till now:</string>
-    <string name="submit_attendance">Submit Attendance</string>
-
-
+    <string name="submit_attendance">Add Attendance</string>
+    <string name="date">Date of Class</string>
 </resources>

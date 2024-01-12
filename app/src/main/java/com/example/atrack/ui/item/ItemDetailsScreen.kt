@@ -56,7 +56,7 @@ object ItemDetailsDestination : NavigationDestination {
 @Composable
 fun ItemDetailsScreen(
     navigateToEditItem: (Int) -> Unit,
-    navigateToAddAttendance:(Int)->Unit,
+    navigateToAddAttendance: (Int) -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ItemDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -86,7 +86,7 @@ fun ItemDetailsScreen(
     ) { innerPadding ->
         ItemDetailsBody(
             itemDetailsUiState = uiState.value,
-            onAdd = { navigateToAddAttendance(uiState.value.itemDetails.id)},
+            onAdd = { navigateToAddAttendance(it)},
             onDelete = {
                 coroutineScope.launch {
                     viewModel.deleteItem()
@@ -103,7 +103,7 @@ fun ItemDetailsScreen(
 @Composable
 private fun ItemDetailsBody(
     itemDetailsUiState: ItemDetailsUiState,
-    onAdd: () -> Unit,
+    onAdd: (Int) -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -116,11 +116,11 @@ private fun ItemDetailsBody(
             item = itemDetailsUiState.itemDetails.toItem(), modifier = Modifier.fillMaxWidth()
         )
         Button(
-            onClick = onAdd,
+            onClick = {onAdd(itemDetailsUiState.itemDetails.id)},
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.small
         ) {
-            Text(stringResource(R.string.sell))
+            Text(stringResource(R.string.submit_attendance))
         }
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
@@ -230,7 +230,7 @@ private fun DeleteConfirmationDialog(
 fun ItemDetailsScreenPreview() {
     ATrackTheme {
         ItemDetailsBody(ItemDetailsUiState(
-            outOfStock = true, itemDetails = ItemDetails(1, "Electronics", "EEPC10", "10","4")
+            itemDetails = ItemDetails(1, "Electronics", "EEPC10", "10","4")
         ), onAdd = {}, onDelete = {})
     }
 }
