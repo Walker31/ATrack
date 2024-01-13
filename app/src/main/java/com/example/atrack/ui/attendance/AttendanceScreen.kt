@@ -24,9 +24,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -41,9 +43,11 @@ import com.example.atrack.data.Subject
 import com.example.atrack.ui.AppViewModelProvider
 import com.example.atrack.ui.home.HomeDestination
 import com.example.atrack.ui.item.ItemDetails
+import com.example.atrack.ui.item.ItemDetails1
 import com.example.atrack.ui.item.toItem
 import com.example.atrack.ui.navigation.NavigationDestination
 import com.example.atrack.ui.theme.ATrackTheme
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 
@@ -53,7 +57,6 @@ object AttendanceDestination : NavigationDestination {
     const val itemIdArg = "itemId"
     val routeWithArgs = "$route/{$itemIdArg}"
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,6 +68,9 @@ fun AttendanceScreen(
 ){
     val uiState = viewModel.uiState.collectAsState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val coroutineScope = rememberCoroutineScope()
+
+    val selectedDate = remember { mutableStateOf("") }
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -79,6 +85,37 @@ fun AttendanceScreen(
     ) { innerPadding ->
         AttendanceTile(
             itemDetailsUiState = uiState.value,
+            onAddClick = {
+                val item=uiState.value.itemDetails.toItem()
+
+                coroutineScope.launch{
+                    viewModel.updateAttendance(
+                        itemDetails1 = ItemDetails1(
+                        item.id,
+                        item.subName,
+                        item.subCode,
+                        selectedDate.value,
+                        true
+                        )
+                    )
+                    println("Updated ItemDetails: $item")
+                    navigateBack()
+                }
+
+            },
+            onAddClick1 = {
+                val item=uiState.value.itemDetails.toItem()
+                coroutineScope.launch{
+                    viewModel.updateAttendance(itemDetails1 = ItemDetails1(
+                        id = item.id,
+                        subName = item.subName,
+                        subCode = item.subCode,
+                        date = selectedDate.value,
+                        attendance = false))
+                    navigateBack()
+                          }
+            },
+            selectedDate = selectedDate,
             modifier = modifier
                 .padding(innerPadding)
         )
@@ -89,6 +126,9 @@ fun AttendanceScreen(
 @Composable
 fun AttendanceTile(
     itemDetailsUiState: AttendanceUiState,
+    selectedDate: MutableState<String>,
+    onAddClick: () -> Unit,
+    onAddClick1: ()-> Unit,
     modifier: Modifier=Modifier
 ){
 
@@ -99,12 +139,13 @@ fun AttendanceTile(
 
         TileDetails(
             item = itemDetailsUiState.itemDetails.toItem(),
+            selectedDate=selectedDate,
             modifier = Modifier.fillMaxWidth()
         )
 
         Row{
             Button(
-                onClick = { },
+                onClick = onAddClick,
                 shape = MaterialTheme.shapes.small,
                 enabled = itemDetailsUiState.isEntryValid,
                 modifier = modifier
@@ -115,7 +156,7 @@ fun AttendanceTile(
             }
 
             ElevatedButton(
-                onClick = { },
+                onClick = onAddClick1,
                 shape = MaterialTheme.shapes.small,
                 enabled = itemDetailsUiState.isEntryValid,
                 modifier = modifier
@@ -132,7 +173,9 @@ fun AttendanceTile(
 fun TileDetails(
     item: Subject,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    selectedDate: MutableState<String>,
+    onValueChange: (ItemDetails1) -> Unit = {}
 ){
 Card(
 modifier = modifier,
@@ -174,7 +217,7 @@ modifier = modifier,
     Column(
         modifier=modifier.padding(dimensionResource(id = R.dimen.padding_medium))
     ) {
-        DatePickerTextField()
+        DatePickerTextField(selectedDate,enabled)
     }
 }
 }
@@ -191,9 +234,10 @@ private fun ItemDetailsRow(
 }
 
 @Composable
-fun DatePickerTextField(enabled: Boolean = true) {
-    // MutableState to hold the selected date
-    val selectedDate = remember { mutableStateOf("") }
+fun DatePickerTextField(
+    selectedDate: MutableState<String>,
+    enabled: Boolean = true,
+) {
 
     val datePickerDialog = remember { mutableStateOf<DatePickerDialog?>(null) }
     val context = LocalContext.current
@@ -214,10 +258,12 @@ fun DatePickerTextField(enabled: Boolean = true) {
 
         datePickerDialog.value?.show()
     }
+
+
     Column {
         OutlinedTextField(
             value = selectedDate.value,
-            onValueChange = {},
+            onValueChange = { },
             label = { Text(stringResource(R.string.date)) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -245,7 +291,10 @@ fun DatePickerTextField(enabled: Boolean = true) {
 fun AttendancePreview() {
     ATrackTheme(darkTheme = true) {
         AttendanceTile(AttendanceUiState(
-            itemDetails = ItemDetails(1, "Electronics", "EEPC10", "10","4")
-        ))
+            itemDetails = ItemDetails(1, "Electronics", "EEPC10", "10","4"),
+            itemDetails1 = ItemDetails1( 1,"Electronics", "EEPC10","14/23/42",true),
+            true
+        ),
+            onAddClick ={}, onAddClick1 ={}, selectedDate =remember { mutableStateOf("") } )
     }
 }

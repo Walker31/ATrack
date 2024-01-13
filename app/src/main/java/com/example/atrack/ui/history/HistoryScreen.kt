@@ -1,7 +1,6 @@
-package com.example.atrack.ui.home
+package com.example.atrack.ui.history
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,13 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,53 +34,42 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.atrack.R
 import com.example.atrack.TrackTopAppBar
-import com.example.atrack.data.Subject
+import com.example.atrack.data.AttendanceTrack
 import com.example.atrack.ui.AppViewModelProvider
 import com.example.atrack.ui.navigation.NavigationDestination
 import com.example.atrack.ui.theme.ATrackTheme
 
-
-object HomeDestination : NavigationDestination {
-    override val route = "home"
-    override val titleRes = R.string.app_name
+object HistoryDestination : NavigationDestination {
+    override val route = "history"
+    override val titleRes = R.string.history
+    const val itemIdArg = "itemId"
+    val routeWithArgs = "$route/{$itemIdArg}"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    navigateToItemEntry: () -> Unit,
-    navigateToItemUpdate: (Int) -> Unit,
+fun HistoryScreen(
+    navigateBack: () -> Unit,
+    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
-) {
-    val homeUiState by viewModel.homeUiState.collectAsState()
+    viewModel: HistoryViewModel = viewModel(factory = AppViewModelProvider.Factory)
+){
+    val historyUiState by viewModel.historyUiState.collectAsState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TrackTopAppBar(
-                title = stringResource(HomeDestination.titleRes),
-                canNavigateBack = false,
+                title = stringResource(HistoryDestination.titleRes),
+                canNavigateBack = true,
+                navigateUp = onNavigateUp,
                 scrollBehavior = scrollBehavior
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = navigateToItemEntry,
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(20.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "ItemEntryTitle"
-                )
-            }
-        },
     ) { innerPadding ->
-        HomeBody(
-            itemList = homeUiState.itemList,
-            onItemClick = navigateToItemUpdate,
+        HistoryBody(
+            itemList = historyUiState.itemList,
             modifier = modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -94,58 +78,56 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeBody(
-    itemList: List<Subject>, onItemClick: (Int) -> Unit, modifier: Modifier = Modifier
+private fun HistoryBody(
+    itemList: List<AttendanceTrack>, modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
         if (itemList.isEmpty()) {
-                Image(
-                    painter = painterResource(id = R.drawable.sad_face),
-                    contentDescription = "Sad Face",
-                    modifier = modifier
-                        .size(200.dp)
-                        .fillMaxHeight()
-                )
-                Text(
-                    text = stringResource(R.string.no_item_description),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-        }
-        else {
-            InventoryList(
-                itemList = itemList,
-                onItemClick = { onItemClick(it.id) },
-                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+            Image(
+                painter = painterResource(id = R.drawable.sad_face),
+                contentDescription = "Sad Face",
+                modifier = modifier
+                    .size(200.dp)
+                    .fillMaxHeight()
+            )
+            Text(
+                text = stringResource(R.string.no_item_description),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
             )
         }
-        }
-}
-
-@Composable
-private fun InventoryList(
-    itemList: List<Subject>, onItemClick: (Subject) -> Unit, modifier: Modifier = Modifier
-) {
-    LazyColumn(modifier = modifier) {
-        items(items=itemList,key= {it.id }) {
-            item ->
-            InventoryItem(item = item,
-                modifier= modifier
-                    .padding(dimensionResource(id = R.dimen.padding_small))
-                    .clickable { onItemClick(item) }
+        else {
+            HistoryList(
+                itemList = itemList,
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             )
         }
     }
 }
 
 @Composable
-private fun InventoryItem(
-    item: Subject, modifier: Modifier = Modifier
+private fun HistoryList(
+    itemList: List<AttendanceTrack>, modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier) {
+        items(items=itemList,key= {it.id }) {
+                item ->
+            HistoryItem(item = item,
+                modifier= modifier
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+            )
+        }
+    }
+}
+
+@Composable
+private fun HistoryItem(
+    item: AttendanceTrack, modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -158,48 +140,26 @@ private fun InventoryItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = item.subName,
-                    style = MaterialTheme.typography.titleLarge,
+                    text = item.date,
+                    style = MaterialTheme.typography.titleMedium,
                 )
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = item.nPresent.toString(),
+                    text = if (item.attendance) "Present" else "Absent",
                     style = MaterialTheme.typography.titleMedium
                 )
             }
-            Text(
-                text = item.subCode,
-                style = MaterialTheme.typography.titleMedium
-            )
         }
     }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeBodyPreview() {
-    ATrackTheme(darkTheme = true) {
-        HomeBody(listOf(
-            Subject(1, "Game", "100.0", 20,50),
-            Subject(2, "Pen", "200.0", 30,40)
-        ), onItemClick = {})
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun HomeBodyEmptyListPreview() {
-    ATrackTheme(darkTheme = true) {
-        HomeBody(listOf(), onItemClick = {})
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun InventoryItemPreview() {
-    ATrackTheme(darkTheme = true) {
-        InventoryItem(
-            Subject(1, "Game", "100.0", 20,50),
-        )
+fun HistoryBodyPreview() {
+    ATrackTheme(darkTheme = false) {
+        HistoryBody(listOf(
+            AttendanceTrack(1, "Game", "100.0", "20/3/2023",true),
+            AttendanceTrack(2, "Pen", "200.0", "21/3/2023",true)
+        ))
     }
 }

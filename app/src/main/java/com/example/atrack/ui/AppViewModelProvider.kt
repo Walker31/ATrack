@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.atrack.TrackApplication
 import com.example.atrack.ui.attendance.AttendanceViewModel
+import com.example.atrack.ui.history.HistoryViewModel
 import com.example.atrack.ui.home.HomeViewModel
 import com.example.atrack.ui.item.ItemDetailsViewModel
 import com.example.atrack.ui.item.ItemEditViewModel
@@ -14,19 +15,18 @@ import com.example.atrack.ui.item.ItemEntryViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
-        // Initializer for ItemEditViewModel
+
         initializer {
             ItemEditViewModel(
                 this.createSavedStateHandle(),
                 inventoryApplication().container.itemsRepository
             )
         }
-        // Initializer for ItemEntryViewModel
+
         initializer {
             ItemEntryViewModel(inventoryApplication().container.itemsRepository)
         }
 
-        // Initializer for ItemDetailsViewModel
         initializer {
             ItemDetailsViewModel(
                 this.createSavedStateHandle(),
@@ -34,7 +34,6 @@ object AppViewModelProvider {
             )
         }
 
-        // Initializer for HomeViewModel
         initializer {
             HomeViewModel(inventoryApplication().container.itemsRepository)
         }
@@ -43,6 +42,12 @@ object AppViewModelProvider {
             AttendanceViewModel(
                 this.createSavedStateHandle(),
                 inventoryApplication().container.itemsRepository)
+        }
+
+        initializer {
+            HistoryViewModel(
+                inventoryApplication().container.itemsRepository
+            )
         }
     }
 }

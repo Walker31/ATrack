@@ -22,4 +22,5 @@
     <string name="nPresent">Classes present till now:</string>
     <string name="submit_attendance">Add Attendance</string>
     <string name="date">Date of Class</string>
+    <string name="history">History</string>
 </resources>

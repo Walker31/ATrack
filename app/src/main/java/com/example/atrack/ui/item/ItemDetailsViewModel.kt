@@ -31,12 +31,10 @@ class ItemDetailsViewModel(
             )
 
 
-    fun reduceQuantityByOne() {
+    fun increaseTotalClasses() {
         viewModelScope.launch {
-            val currentItem = uiState.value.itemDetails.toItem()
-            if (currentItem.nPresent > 0) {
-                itemsRepository.updateItem(currentItem.copy(nPresent = currentItem.nPresent + 1))
-            }
+            var currentItem = uiState.value.itemDetails.toItem()
+                itemsRepository.updateItem(currentItem.copy(nTotal = currentItem.nTotal + 1))
         }
     }
 

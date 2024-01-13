@@ -101,7 +101,7 @@ fun ItemEntryBody(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun ItemInputForm(
     itemDetails: ItemDetails,
@@ -147,7 +147,7 @@ fun ItemInputForm(
         )
         OutlinedTextField(
             value = itemDetails.nPresent,
-            onValueChange = { onValueChange(itemDetails.copy(nPresent = it.toString())) },
+            onValueChange = { onValueChange(itemDetails.copy(nPresent = it)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             label = { Text(stringResource(R.string.nPresent)) },
             colors = OutlinedTextFieldDefaults.colors(

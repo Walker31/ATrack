@@ -6,6 +6,8 @@ interface SubjectsRepository{
 
     fun getAllItemsStream(): Flow<List<Subject>>
 
+    fun getHistory(): Flow<List<AttendanceTrack>>
+
     fun getAttendanceCount(subName: String): Int
 
     fun getDateCount(subName: String): Int
@@ -14,6 +16,7 @@ interface SubjectsRepository{
 
     suspend fun insertItem(item: Subject)
 
+    suspend fun update(item:AttendanceTrack)
     suspend fun insertDate(item: AttendanceTrack)
 
     suspend fun deleteItem(item: Subject)

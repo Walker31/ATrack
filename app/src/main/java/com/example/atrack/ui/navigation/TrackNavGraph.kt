@@ -10,6 +10,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.atrack.ui.attendance.AttendanceDestination
 import com.example.atrack.ui.attendance.AttendanceScreen
+import com.example.atrack.ui.history.HistoryDestination
+import com.example.atrack.ui.history.HistoryScreen
 import com.example.atrack.ui.home.HomeDestination
 import com.example.atrack.ui.home.HomeScreen
 import com.example.atrack.ui.item.ItemDetailsDestination
@@ -50,6 +52,7 @@ fun TrackNavHost(navController: NavHostController,
             ItemDetailsScreen(
                 navigateToEditItem = { navController.navigate("${ItemEditDestination.route}/$it") },
                 navigateToAddAttendance = { navController.navigate("${AttendanceDestination.route}/$it") },
+                navigateToHistory={navController.navigate("${HistoryDestination.route}/$it")},
                 navigateBack = { navController.navigateUp() }
             )
         }
@@ -73,6 +76,15 @@ fun TrackNavHost(navController: NavHostController,
             AttendanceScreen(
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() }
+            )
+        }
+        composable(route = HistoryDestination.routeWithArgs,
+            arguments = listOf(navArgument(HistoryDestination.itemIdArg) {
+                type = NavType.StringType
+            })) {
+            HistoryScreen(
+                navigateBack = { navController.popBackStack()},
+                onNavigateUp = { navController.navigateUp()}
             )
         }
     }

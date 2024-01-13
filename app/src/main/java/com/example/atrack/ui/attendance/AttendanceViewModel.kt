@@ -8,7 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.atrack.data.SubjectsRepository
 import com.example.atrack.ui.item.ItemDetails
+import com.example.atrack.ui.item.ItemDetails1
 import com.example.atrack.ui.item.ItemUiState
+import com.example.atrack.ui.item.toItem1
 import com.example.atrack.ui.item.toItemDetails
 import com.example.atrack.ui.item.toItemUiState
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,10 +26,34 @@ class AttendanceViewModel(
     private val itemsRepository: SubjectsRepository
 ) : ViewModel() {
 
-    var itemUiState by mutableStateOf(ItemUiState())
-        private set
-
+    private var itemUiState by mutableStateOf(ItemUiState())
     private val itemId: Int = checkNotNull(savedStateHandle[AttendanceDestination.itemIdArg])
+    private val itemDetails = ItemDetails()
+    private val itemDetails1 = ItemDetails1()
+
+
+    init {
+        initializeDate(itemDetails1, itemDetails)
+        viewModelScope.launch {
+            try {
+                val data = itemsRepository.getItemStream(itemId)
+                    .filterNotNull()
+                    .first()
+                println("Received data: $data")
+
+                itemUiState = data.toItemUiState(true)
+                itemDetails1.id = itemUiState.itemDetails.id
+                itemDetails1.subName = itemUiState.itemDetails.subName
+                itemDetails1.subCode = itemUiState.itemDetails.subCode
+                println(itemUiState)
+                println(itemDetails1)
+            }
+            catch (e: Exception) {
+                // Log any exceptions that might occur during data retrieval
+                println("Error retrieving data: $e")
+            }
+        }
+    }
 
     val uiState: StateFlow<AttendanceUiState> =
         itemsRepository.getItemStream(itemId)
@@ -40,23 +66,26 @@ class AttendanceViewModel(
                 initialValue = AttendanceUiState()
             )
 
-    fun updateUiState(itemDetails: ItemDetails) {
-        itemUiState =
-            ItemUiState(itemDetails = itemDetails, isEntryValid = validateInput(itemDetails))
+
+    suspend fun updateAttendance(itemDetails1: ItemDetails1){
+        try {
+            itemsRepository.insertDate(itemDetails1.toItem1())
+            println("Updated ItemDetails: $itemDetails1")
+        }catch (e: Exception) {
+            println("Error updating attendance: $e")
+        }
     }
 
-    private fun validateInput(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
+    private fun validateInput(uiState: ItemDetails1 = itemUiState.itemDetails1): Boolean {
         return with(uiState) {
-            subName.isNotBlank()
+            date.isNotBlank()
         }
     }
-    init {
-        viewModelScope.launch {
-            itemUiState = itemsRepository.getItemStream(itemId)
-                .filterNotNull()
-                .first()
-                .toItemUiState(true)
-        }
+
+    private fun initializeDate(itemDetails1: ItemDetails1, itemDetails: ItemDetails) {
+        itemDetails1.id = itemDetails.id
+        itemDetails1.subCode = itemDetails.subCode
+        itemDetails1.subName = itemDetails.subName
     }
 
     companion object {
@@ -66,5 +95,6 @@ class AttendanceViewModel(
 
 data class AttendanceUiState(
     val itemDetails: ItemDetails = ItemDetails(),
+    val itemDetails1: ItemDetails1 =ItemDetails1(),
     val isEntryValid: Boolean = true
 )

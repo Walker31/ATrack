@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.atrack.data.AttendanceTrack
 import com.example.atrack.data.Subject
 import com.example.atrack.data.SubjectDao
 import com.example.atrack.data.SubjectDatabase
@@ -23,6 +24,10 @@ class SubjectDaoTest {
     private lateinit var inventoryDatabase: SubjectDatabase
     private val item1 = Subject(1, "Apples", "10.0", 20,50)
     private val item2 = Subject(2, "Bananas", "15.0", 97,150)
+    private val item3=AttendanceTrack(2,"Physics","PHIR","14/7/2022",true)
+    private val item4=AttendanceTrack(3,"Physics","PHIR","14/7/2022",true)
+    private val item5=AttendanceTrack(4,"Physics","PHIR","14/7/2022",true)
+
 
     @Before
     fun createDb() {
@@ -59,6 +64,13 @@ class SubjectDaoTest {
         assertEquals(allItems[1], item2)
     }
 
+    @Test
+    @Throws(Exception::class)
+    fun daoGetCount()= runBlocking {
+        addTwoItemsToDb()
+        val count =itemDao.getDateCount(subName= "PHIR")
+        assertEquals(3,count)
+    }
 
     @Test
     @Throws(Exception::class)
@@ -95,7 +107,8 @@ class SubjectDaoTest {
     }
 
     private suspend fun addTwoItemsToDb() {
-        itemDao.insert(item1)
-        itemDao.insert(item2)
+        itemDao.insertDate(item3)
+        itemDao.insertDate(item4)
+        itemDao.insertDate(item5)
     }
 }

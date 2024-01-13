@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -57,6 +58,7 @@ object ItemDetailsDestination : NavigationDestination {
 fun ItemDetailsScreen(
     navigateToEditItem: (Int) -> Unit,
     navigateToAddAttendance: (Int) -> Unit,
+    navigateToHistory:(String)->Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ItemDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -71,17 +73,31 @@ fun ItemDetailsScreen(
                 navigateUp = navigateBack
             )
         }, floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navigateToEditItem(uiState.value.itemDetails.id) },
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
-
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = stringResource(R.string.edit_item_title),
+            Column {
+                FloatingActionButton(
+                    onClick = { navigateToHistory(uiState.value.itemDetails.subName)},
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
                 )
+                {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = stringResource(R.string.edit_item_title),
+                    )
+                }
+                FloatingActionButton(
+                    onClick = { navigateToEditItem(uiState.value.itemDetails.id) },
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
+
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = stringResource(R.string.edit_item_title),
+                    )
+                }
             }
+
         }, modifier = modifier
     ) { innerPadding ->
         ItemDetailsBody(

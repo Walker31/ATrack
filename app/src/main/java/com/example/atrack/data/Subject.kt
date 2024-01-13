@@ -6,9 +6,9 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "items")
 data class Subject(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val subName: String,
-    val subCode: String,
-    val nPresent: Int,
-    val nTotal: Int
+    var id: Int,
+    var subName: String,
+    var subCode: String,
+    var nPresent: Int,
+    var nTotal: Int
 )
