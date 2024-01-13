@@ -10,5 +10,6 @@ data class Subject(
     var subName: String,
     var subCode: String,
     var nPresent: Int,
-    var nTotal: Int
+    var nTotal: Int,
+    var percent: Int
 )

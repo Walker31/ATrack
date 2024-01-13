@@ -163,7 +163,7 @@ private fun InventoryItem(
                 )
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = item.nPresent.toString(),
+                    text = item.percent.toString()+" %",
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -180,8 +180,8 @@ private fun InventoryItem(
 fun HomeBodyPreview() {
     ATrackTheme(darkTheme = true) {
         HomeBody(listOf(
-            Subject(1, "Game", "100.0", 20,50),
-            Subject(2, "Pen", "200.0", 30,40)
+            Subject(1, "Game", "100.0", 20,50,0),
+            Subject(2, "Pen", "200.0", 30,40,0)
         ), onItemClick = {})
     }
 }
@@ -199,7 +199,7 @@ fun HomeBodyEmptyListPreview() {
 fun InventoryItemPreview() {
     ATrackTheme(darkTheme = true) {
         InventoryItem(
-            Subject(1, "Game", "100.0", 20,50),
+            Subject(1, "Game", "100.0", 20,50,0),
         )
     }
 }

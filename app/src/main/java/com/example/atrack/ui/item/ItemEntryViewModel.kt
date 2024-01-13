@@ -46,6 +46,7 @@ data class ItemDetails(
     val subCode: String = "",
     val nPresent: String = "",
     val nTotal: String = "",
+    val percent:String=""
 )
 
 data class ItemDetails1(
@@ -61,7 +62,8 @@ fun ItemDetails.toItem(): Subject = Subject(
     subName = subName,
     subCode = subCode,
     nPresent = nPresent.toIntOrNull() ?: 0,
-    nTotal = nTotal.toIntOrNull() ?: 0
+    nTotal = nTotal.toIntOrNull() ?: 0,
+    percent=percent.toIntOrNull() ?:0
 )
 
 fun ItemDetails1.toItem1(): AttendanceTrack = AttendanceTrack(
@@ -86,7 +88,8 @@ fun Subject.toItemDetails(): ItemDetails = ItemDetails(
     subName = subName,
     subCode = subCode,
     nPresent = nPresent.toString(),
-    nTotal = nTotal.toString()
+    nTotal = nTotal.toString(),
+    percent =percent.toString()
 )
 
 fun AttendanceTrack.toItemDetails1(): ItemDetails1 = ItemDetails1(

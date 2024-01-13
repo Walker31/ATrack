@@ -1,6 +1,7 @@
 
 package com.example.atrack.ui.item
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,6 +54,7 @@ object ItemDetailsDestination : NavigationDestination {
     val routeWithArgs = "$route/{$itemIdArg}"
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemDetailsScreen(
@@ -65,6 +67,7 @@ fun ItemDetailsScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             TrackTopAppBar(
@@ -107,8 +110,7 @@ fun ItemDetailsScreen(
                 coroutineScope.launch {
                     viewModel.deleteItem()
                     navigateBack()
-                }
-            },
+                }},
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
@@ -123,14 +125,23 @@ private fun ItemDetailsBody(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val classCount=itemDetailsUiState.classCount
+    val present = itemDetailsUiState.presentClass
+
     Column(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
         ItemDetails(
-            item = itemDetailsUiState.itemDetails.toItem(), modifier = Modifier.fillMaxWidth()
-        )
+            item = itemDetailsUiState.itemDetails.toItem(),
+            modifier = Modifier.fillMaxWidth(),
+            classCount = classCount,
+            percent = if (classCount != 0) {
+                (present / classCount) * 100
+            } else {
+                0
+            }        )
         Button(
             onClick = {onAdd(itemDetailsUiState.itemDetails.id)},
             modifier = Modifier.fillMaxWidth(),
@@ -161,14 +172,16 @@ private fun ItemDetailsBody(
 
 @Composable
 fun ItemDetails(
-    item: Subject, modifier: Modifier = Modifier
+    item: Subject, modifier: Modifier = Modifier,classCount: Int,percent:Int
 ) {
+    item.percent=percent
     Card(
         modifier = modifier, colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         )
     ) {
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -197,7 +210,17 @@ fun ItemDetails(
             )
             ItemDetailsRow(
                 labelResID = R.string.nTotal,
-                itemDetail = item.nPresent.toString(),
+                itemDetail = classCount.toString(),
+                modifier = Modifier.padding(
+                    horizontal = dimensionResource(
+                        id = R.dimen
+                            .padding_medium
+                    )
+                )
+            )
+            ItemDetailsRow(
+                labelResID = R.string.percent,
+                itemDetail = percent.toString(),
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(
                         id = R.dimen
@@ -225,7 +248,7 @@ private fun ItemDetailsRow(
 private fun DeleteConfirmationDialog(
     onDeleteConfirm: () -> Unit, onDeleteCancel: () -> Unit, modifier: Modifier = Modifier
 ) {
-    AlertDialog(onDismissRequest = { /* Do nothing */ },
+    AlertDialog(onDismissRequest = {},
         title = { Text(stringResource(R.string.attention)) },
         text = { Text(stringResource(R.string.delete_question)) },
         modifier = modifier,
@@ -247,6 +270,6 @@ fun ItemDetailsScreenPreview() {
     ATrackTheme {
         ItemDetailsBody(ItemDetailsUiState(
             itemDetails = ItemDetails(1, "Electronics", "EEPC10", "10","4")
-        ), onAdd = {}, onDelete = {})
+        ), onAdd = {}, onDelete = {},)
     }
 }
