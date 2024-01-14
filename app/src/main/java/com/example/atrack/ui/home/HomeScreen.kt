@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -71,15 +72,28 @@ fun HomeScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = navigateToItemEntry,
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(20.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "ItemEntryTitle"
-                )
+            Column {
+                FloatingActionButton(
+                    onClick = navigateToItemEntry,
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "ItemEntryTitle"
+                    )
+                }
+
+                FloatingActionButton(
+                    onClick = {},
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "ItemEntryTitle"
+                    )
+                }
             }
         },
     ) { innerPadding ->
