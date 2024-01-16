@@ -125,9 +125,6 @@ private fun ItemDetailsBody(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val classCount=itemDetailsUiState.classCount
-    val present = itemDetailsUiState.presentClass
-
     Column(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
@@ -135,13 +132,8 @@ private fun ItemDetailsBody(
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
         ItemDetails(
             item = itemDetailsUiState.itemDetails.toItem(),
-            modifier = Modifier.fillMaxWidth(),
-            classCount = classCount,
-            percent = if (classCount != 0) {
-                (present / classCount) * 100
-            } else {
-                0
-            }        )
+            modifier = Modifier.fillMaxWidth()
+        )
         Button(
             onClick = {onAdd(itemDetailsUiState.itemDetails.id)},
             modifier = Modifier.fillMaxWidth(),
@@ -149,6 +141,7 @@ private fun ItemDetailsBody(
         ) {
             Text(stringResource(R.string.submit_attendance))
         }
+
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
             shape = MaterialTheme.shapes.small,
@@ -172,9 +165,9 @@ private fun ItemDetailsBody(
 
 @Composable
 fun ItemDetails(
-    item: Subject, modifier: Modifier = Modifier,classCount: Int,percent:Int
+    item: Subject, modifier: Modifier = Modifier
 ) {
-    item.percent=percent
+
     Card(
         modifier = modifier, colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -210,7 +203,7 @@ fun ItemDetails(
             )
             ItemDetailsRow(
                 labelResID = R.string.nTotal,
-                itemDetail = classCount.toString(),
+                itemDetail = item.nTotal.toString(),
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(
                         id = R.dimen
@@ -220,7 +213,7 @@ fun ItemDetails(
             )
             ItemDetailsRow(
                 labelResID = R.string.percent,
-                itemDetail = percent.toString(),
+                itemDetail = item.percent.toString(),
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(
                         id = R.dimen

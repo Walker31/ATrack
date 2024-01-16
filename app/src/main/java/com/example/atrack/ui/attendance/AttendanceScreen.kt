@@ -47,7 +47,9 @@ import com.example.atrack.ui.item.ItemDetails1
 import com.example.atrack.ui.item.toItem
 import com.example.atrack.ui.navigation.NavigationDestination
 import com.example.atrack.ui.theme.ATrackTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 
@@ -86,32 +88,17 @@ fun AttendanceScreen(
         AttendanceTile(
             itemDetailsUiState = uiState.value,
             onAddClick = {
+                attendance ->
                 val item=uiState.value.itemDetails.toItem()
-
                 coroutineScope.launch{
-                    viewModel.updateAttendance(
-                        itemDetails1 = ItemDetails1(
-                        item.id,
-                        item.subName,
-                        item.subCode,
-                        selectedDate.value,
-                        true
+                    withContext(Dispatchers.IO) {
+                        viewModel.updateAttendance(
+                            subName = item.subName,
+                            subCode = item.subCode,
+                            date = selectedDate.value,
+                            attendance = attendance
                         )
-                    )
-                    println("Updated ItemDetails: $item")
-                    navigateBack()
-                }
-
-            },
-            onAddClick1 = {
-                val item=uiState.value.itemDetails.toItem()
-                coroutineScope.launch{
-                    viewModel.updateAttendance(itemDetails1 = ItemDetails1(
-                        id = item.id,
-                        subName = item.subName,
-                        subCode = item.subCode,
-                        date = selectedDate.value,
-                        attendance = false))
+                    }
                     navigateBack()
                           }
             },
@@ -127,8 +114,7 @@ fun AttendanceScreen(
 fun AttendanceTile(
     itemDetailsUiState: AttendanceUiState,
     selectedDate: MutableState<String>,
-    onAddClick: () -> Unit,
-    onAddClick1: ()-> Unit,
+    onAddClick: (Boolean)-> Unit,
     modifier: Modifier=Modifier
 ){
 
@@ -145,7 +131,7 @@ fun AttendanceTile(
 
         Row{
             Button(
-                onClick = onAddClick,
+                onClick = { onAddClick(true) },
                 shape = MaterialTheme.shapes.small,
                 enabled = itemDetailsUiState.isEntryValid,
                 modifier = modifier
@@ -156,7 +142,7 @@ fun AttendanceTile(
             }
 
             ElevatedButton(
-                onClick = onAddClick1,
+                onClick = { onAddClick(false) },
                 shape = MaterialTheme.shapes.small,
                 enabled = itemDetailsUiState.isEntryValid,
                 modifier = modifier
@@ -207,7 +193,7 @@ modifier = modifier,
         )
         ItemDetailsRow(
             labelResID = R.string.nTotal,
-            itemDetail = item.nPresent.toString(),
+            itemDetail = item.nTotal.toString(),
             modifier = Modifier.padding(
                 horizontal = dimensionResource(id = R.dimen
                         .padding_small)
@@ -295,6 +281,6 @@ fun AttendancePreview() {
             itemDetails1 = ItemDetails1( 1,"Electronics", "EEPC10","14/23/42",true),
             true
         ),
-            onAddClick ={}, onAddClick1 ={}, selectedDate =remember { mutableStateOf("") } )
+            onAddClick ={}, selectedDate =remember { mutableStateOf("") } )
     }
 }

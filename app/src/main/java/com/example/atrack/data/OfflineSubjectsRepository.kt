@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 class OfflineSubjectsRepository(private val itemDao: SubjectDao): SubjectsRepository {
     override fun getAllItemsStream(): Flow<List<Subject>> = itemDao.getAllItems()
 
-    override fun getHistory(): Flow<List<AttendanceTrack>> = itemDao.getHistory()
+    override fun getHistory(subName: String): Flow<List<AttendanceTrack>> = itemDao.getHistory(subName)
 
     override fun getItemStream(id: Int): Flow<Subject?> = itemDao.getItem(id)
 
@@ -21,9 +21,13 @@ class OfflineSubjectsRepository(private val itemDao: SubjectDao): SubjectsReposi
 
     override suspend fun insertDate(item: AttendanceTrack) = itemDao.insertDate(item)
 
-    override suspend fun deleteItem(item: Subject) = itemDao.delete(item)
+    override suspend fun delete(subName: String) =itemDao.delete(subName)
+
+    override suspend fun deleteItem(item: Subject) = itemDao.deleteItem(item)
 
     override suspend fun updateItem(item: Subject) = itemDao.update(item)
 
     override suspend fun update(item: AttendanceTrack) = itemDao.updateItem(item)
+
+    override suspend fun updateSubject(nTotal: Int,nPresent:Int,percent:Float, subName: String) = itemDao.updateSubject(nTotal, nPresent,percent, subName)
 }

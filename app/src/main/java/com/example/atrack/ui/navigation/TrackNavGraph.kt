@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.atrack.ui.attendance.AttendanceDestination
 import com.example.atrack.ui.attendance.AttendanceScreen
+import com.example.atrack.ui.attendance.AttendanceUiState
 import com.example.atrack.ui.history.HistoryDestination
 import com.example.atrack.ui.history.HistoryScreen
 import com.example.atrack.ui.home.HomeDestination
@@ -88,7 +89,8 @@ fun TrackNavHost(navController: NavHostController,
             })) {
             HistoryScreen(
                 navigateBack = { navController.popBackStack() },
-                onNavigateUp = { navController.navigateUp() }
+                onNavigateUp = { navController.navigateUp() },
+                itemDetailsUiState = AttendanceUiState()
             )
         }
 

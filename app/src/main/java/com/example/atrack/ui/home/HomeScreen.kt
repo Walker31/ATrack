@@ -91,7 +91,7 @@ fun HomeScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "ItemEntryTitle"
+                        contentDescription = "ItemSearch"
                     )
                 }
             }
@@ -193,8 +193,8 @@ private fun InventoryItem(
 fun HomeBodyPreview() {
     ATrackTheme(darkTheme = true) {
         HomeBody(listOf(
-            Subject(1, "Game", "100.0", 20,50,0),
-            Subject(2, "Pen", "200.0", 30,40,0)
+            Subject(1, "Game", "100.0", 20,50,0f),
+            Subject(2, "Pen", "200.0", 30,40,0f)
         ), onItemClick = {})
     }
 }
@@ -212,7 +212,7 @@ fun HomeBodyEmptyListPreview() {
 fun InventoryItemPreview() {
     ATrackTheme(darkTheme = true) {
         InventoryItem(
-            Subject(1, "Game", "100.0", 20,50,0),
+            Subject(1, "Game", "100.0", 20,50,0f),
         )
     }
 }

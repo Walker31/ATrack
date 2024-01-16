@@ -1,5 +1,6 @@
 package com.example.atrack.ui.history
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,8 +21,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -36,6 +41,8 @@ import com.example.atrack.R
 import com.example.atrack.TrackTopAppBar
 import com.example.atrack.data.AttendanceTrack
 import com.example.atrack.ui.AppViewModelProvider
+import com.example.atrack.ui.attendance.AttendanceUiState
+import com.example.atrack.ui.item.toItem
 import com.example.atrack.ui.navigation.NavigationDestination
 import com.example.atrack.ui.theme.ATrackTheme
 
@@ -46,9 +53,11 @@ object HistoryDestination : NavigationDestination {
     val routeWithArgs = "$route/{$itemIdArg}"
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
+    itemDetailsUiState: AttendanceUiState,
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
@@ -57,6 +66,17 @@ fun HistoryScreen(
     val historyUiState by viewModel.historyUiState.collectAsState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
+    val item=itemDetailsUiState.itemDetails.toItem()
+
+    var items by remember { mutableStateOf<List<AttendanceTrack>>(emptyList()) }
+    
+    Text(text = item.subName)
+
+    LaunchedEffect(item) {
+        viewModel.getHistory(item).collect {
+            items = it
+        }
+    }
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {

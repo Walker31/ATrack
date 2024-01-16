@@ -13,8 +13,8 @@ interface SubjectDao{
     @Query("SELECT * from items ORDER BY subName ASC")
     fun getAllItems(): Flow<List<Subject>>
 
-    @Query("SELECT * from AttendanceTrack ORDER BY date ASC")
-    fun getHistory(): Flow<List<AttendanceTrack>>
+    @Query("SELECT * from AttendanceTrack where subName=:subName ORDER BY date ASC")
+    fun getHistory(subName: String): Flow<List<AttendanceTrack>>
 
     @Query("SELECT * from AttendanceTrack where date = :date")
     fun getAllItemsOnDate(date: String): List<AttendanceTrack>
@@ -37,15 +37,17 @@ interface SubjectDao{
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(item: Subject)
 
-    @Insert
-    suspend fun insertAllIntoTable2(table2Entities: List<AttendanceTrack>)
-
     @Update
     suspend fun updateItem(item: AttendanceTrack)
 
     @Update
     suspend fun update(item: Subject)
-
     @Delete
-    suspend fun delete(item: Subject)
+    suspend fun deleteItem(item: Subject)
+
+    @Query (" Delete from AttendanceTrack where subName= :subName")
+    suspend fun delete(subName: String)
+
+    @Query("Update ITEMS set nTotal=:nTotal,nPresent=:nPresent,percent=:percent where subName=:subName")
+    suspend fun updateSubject(nTotal: Int,nPresent:Int, percent: Float,subName: String)
 }

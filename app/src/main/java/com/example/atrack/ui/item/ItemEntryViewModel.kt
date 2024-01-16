@@ -53,8 +53,8 @@ data class ItemDetails1(
     var id: Int = 0,
     var subName: String = "Hi",
     var subCode: String = "H",
-    val date: String="0/00/0000",
-    val attendance: Boolean =false
+    var date: String="0/00/0000",
+    var attendance: Boolean =false
 )
 
 fun ItemDetails.toItem(): Subject = Subject(
@@ -63,7 +63,7 @@ fun ItemDetails.toItem(): Subject = Subject(
     subCode = subCode,
     nPresent = nPresent.toIntOrNull() ?: 0,
     nTotal = nTotal.toIntOrNull() ?: 0,
-    percent=percent.toIntOrNull() ?:0
+    percent=percent.toFloatOrNull() ?:0f
 )
 
 fun ItemDetails1.toItem1(): AttendanceTrack = AttendanceTrack(
@@ -79,10 +79,6 @@ fun Subject.toItemUiState(isEntryValid: Boolean = false): ItemUiState = ItemUiSt
     isEntryValid = isEntryValid
 )
 
-fun AttendanceTrack.toItemUiState(isEntryValid: Boolean = false): ItemUiState = ItemUiState(
-    itemDetails1 = this.toItemDetails1(),
-    isEntryValid = isEntryValid
-)
 fun Subject.toItemDetails(): ItemDetails = ItemDetails(
     id = id,
     subName = subName,
@@ -90,12 +86,4 @@ fun Subject.toItemDetails(): ItemDetails = ItemDetails(
     nPresent = nPresent.toString(),
     nTotal = nTotal.toString(),
     percent =percent.toString()
-)
-
-fun AttendanceTrack.toItemDetails1(): ItemDetails1 = ItemDetails1(
-    id = id,
-    subName = subName,
-    subCode = subCode,
-    date = date,
-    attendance=attendance
 )

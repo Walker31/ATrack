@@ -48,6 +48,7 @@ fun ItemEntryScreen(
     viewModel: ItemEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             TrackTopAppBar(

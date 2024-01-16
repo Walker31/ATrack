@@ -47,6 +47,7 @@ object AppViewModelProvider {
 
         initializer {
             HistoryViewModel(
+                this.createSavedStateHandle(),
                 inventoryApplication().container.itemsRepository
             )
         }

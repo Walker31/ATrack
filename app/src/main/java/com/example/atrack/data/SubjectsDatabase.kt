@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [Subject::class,AttendanceTrack::class], version = 4, exportSchema = false)
+@Database(entities = [Subject::class,AttendanceTrack::class], version = 5, exportSchema = false)
 abstract class SubjectDatabase : RoomDatabase() {
 
     abstract fun itemDao(): SubjectDao
