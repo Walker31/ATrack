@@ -9,6 +9,10 @@ class OfflineSubjectsRepository(private val itemDao: SubjectDao): SubjectsReposi
 
     override fun getItemStream(id: Int): Flow<Subject?> = itemDao.getItem(id)
 
+    override fun getAllItemsOnDate(date: String): List<AttendanceTrack> =itemDao.getAllItemsOnDate(date)
+
+    override fun getAllItemsOnDateStream(date: String): Flow<List<AttendanceTrack>> =itemDao.getAllItemsOnDateStream(date)
+
     override fun getAttendanceCount(subName: String): Int = itemDao.getAttendanceCount(subName)
 
     override fun getDateCount(subName: String): Int = itemDao.getDateCount(subName)

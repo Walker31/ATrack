@@ -16,6 +16,12 @@ interface SubjectDao{
     @Query("SELECT * from AttendanceTrack ORDER BY date ASC")
     fun getHistory(): Flow<List<AttendanceTrack>>
 
+    @Query("SELECT * from AttendanceTrack where date = :date")
+    fun getAllItemsOnDate(date: String): List<AttendanceTrack>
+
+    @Query("SELECT * from AttendanceTrack where date = :date")
+    fun getAllItemsOnDateStream(date: String): Flow<List<AttendanceTrack>>
+
     @Query("SELECT count(attendance) from AttendanceTrack where attendance is 1 and subName = :subName")
     fun getAttendanceCount(subName: String): Int
 
@@ -26,7 +32,7 @@ interface SubjectDao{
     fun getItem(id: Int): Flow<Subject>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertDate(item: AttendanceTrack)
+    fun insertDate(item: AttendanceTrack)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(item: Subject)

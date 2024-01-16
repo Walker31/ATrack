@@ -12,6 +12,10 @@ interface SubjectsRepository{
 
     fun getDateCount(subName: String): Int
 
+    fun getAllItemsOnDateStream(date: String): Flow<List<AttendanceTrack>>
+
+    fun getAllItemsOnDate(date: String): List<AttendanceTrack>
+
     fun getItemStream(id: Int): Flow<Subject?>
 
     suspend fun insertItem(item: Subject)

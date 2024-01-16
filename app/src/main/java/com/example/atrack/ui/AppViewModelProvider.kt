@@ -12,6 +12,7 @@ import com.example.atrack.ui.home.HomeViewModel
 import com.example.atrack.ui.item.ItemDetailsViewModel
 import com.example.atrack.ui.item.ItemEditViewModel
 import com.example.atrack.ui.item.ItemEntryViewModel
+import com.example.atrack.ui.search.SearchViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -48,6 +49,13 @@ object AppViewModelProvider {
             HistoryViewModel(
                 inventoryApplication().container.itemsRepository
             )
+        }
+
+        initializer{
+            SearchViewModel(
+                this.createSavedStateHandle(),
+                inventoryApplication().container.itemsRepository
+                )
         }
     }
 }

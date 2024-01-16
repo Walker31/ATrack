@@ -31,6 +31,7 @@ fun TrackTopAppBar(
 ) {
     CenterAlignedTopAppBar(
         title = { Text(title) },
+
         modifier = modifier,
         scrollBehavior = scrollBehavior,
         navigationIcon = {

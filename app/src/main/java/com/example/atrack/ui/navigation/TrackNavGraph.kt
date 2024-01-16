@@ -20,6 +20,9 @@ import com.example.atrack.ui.item.ItemEditDestination
 import com.example.atrack.ui.item.ItemEditScreen
 import com.example.atrack.ui.item.ItemEntryDestination
 import com.example.atrack.ui.item.ItemEntryScreen
+import com.example.atrack.ui.search.SearchDestination
+import com.example.atrack.ui.search.SearchScreen
+
 @Composable
 fun TrackNavHost(navController: NavHostController,
                   modifier: Modifier = Modifier,
@@ -34,7 +37,8 @@ fun TrackNavHost(navController: NavHostController,
                 navigateToItemEntry = { navController.navigate(ItemEntryDestination.route) },
                 navigateToItemUpdate = {
                     navController.navigate("${ItemDetailsDestination.route}/${it}")
-                }
+                },
+                navigateToSearchItem={navController.navigate("${SearchDestination.route}/${it}")}
             )
         }
         composable(route = ItemEntryDestination.route) {
@@ -83,6 +87,16 @@ fun TrackNavHost(navController: NavHostController,
                 type = NavType.StringType
             })) {
             HistoryScreen(
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() }
+            )
+        }
+
+        composable(route = SearchDestination.routeWithArgs,
+            arguments = listOf(navArgument(SearchDestination.itemIdArg) {
+                type = NavType.StringType
+            })) {
+            SearchScreen(
                 navigateBack = { navController.popBackStack()},
                 onNavigateUp = { navController.navigateUp()}
             )

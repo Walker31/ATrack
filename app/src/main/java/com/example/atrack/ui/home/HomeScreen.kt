@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -56,6 +55,7 @@ object HomeDestination : NavigationDestination {
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
     navigateToItemUpdate: (Int) -> Unit,
+    navigateToSearchItem:() -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -85,7 +85,7 @@ fun HomeScreen(
                 }
 
                 FloatingActionButton(
-                    onClick = {},
+                    onClick = navigateToSearchItem,
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier.padding(20.dp)
                 ) {
@@ -120,8 +120,7 @@ private fun HomeBody(
                     painter = painterResource(id = R.drawable.sad_face),
                     contentDescription = "Sad Face",
                     modifier = modifier
-                        .size(200.dp)
-                        .fillMaxHeight()
+                        .size(20.dp)
                 )
                 Text(
                     text = stringResource(R.string.no_item_description),

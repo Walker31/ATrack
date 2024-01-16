@@ -22,4 +22,5 @@
     <string name="date">Date of Class</string>
     <string name="history">History</string>
     <string name="percent">Attendance %:</string>
+    <string name="no_class">Oops!\n No Class on that Day</string>
 </resources>

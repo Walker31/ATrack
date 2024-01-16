@@ -10,5 +10,4 @@ data class AttendanceTrack (
     var subCode: String,
     var subName: String,
     var date: String,
-    var attendance: Boolean
-)
+    var attendance: Boolean)
