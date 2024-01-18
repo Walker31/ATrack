@@ -86,7 +86,9 @@ fun AttendanceScreen(
         }
     ) { innerPadding ->
         AttendanceTile(
-            itemDetailsUiState = uiState.value,
+            itemUiState = uiState.value,
+            onItemValueChange = {
+                viewModel.validateInput(selectedDate.value)},
             onAddClick = {
                 attendance ->
                 val item=uiState.value.itemDetails.toItem()
@@ -112,11 +114,16 @@ fun AttendanceScreen(
 
 @Composable
 fun AttendanceTile(
-    itemDetailsUiState: AttendanceUiState,
+    itemUiState: AttendanceUiState,
+    onItemValueChange: (String) -> Unit,
     selectedDate: MutableState<String>,
     onAddClick: (Boolean)-> Unit,
-    modifier: Modifier=Modifier
+    modifier: Modifier=Modifier,
+    viewModel: AttendanceViewModel = viewModel(factory = AppViewModelProvider.Factory)
+
 ){
+
+    val enabled=viewModel.validateInput(selectedDate.value)
 
     Column(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium))
@@ -124,7 +131,7 @@ fun AttendanceTile(
     ) {
 
         TileDetails(
-            item = itemDetailsUiState.itemDetails.toItem(),
+            item = itemUiState.itemDetails.toItem(),
             selectedDate=selectedDate,
             modifier = Modifier.fillMaxWidth()
         )
@@ -133,7 +140,7 @@ fun AttendanceTile(
             Button(
                 onClick = { onAddClick(true) },
                 shape = MaterialTheme.shapes.small,
-                enabled = itemDetailsUiState.isEntryValid,
+                enabled = enabled,
                 modifier = modifier
                     .padding(dimensionResource(id = R.dimen.padding_medium))
                     .weight(1f)
@@ -144,7 +151,7 @@ fun AttendanceTile(
             ElevatedButton(
                 onClick = { onAddClick(false) },
                 shape = MaterialTheme.shapes.small,
-                enabled = itemDetailsUiState.isEntryValid,
+                enabled = enabled,
                 modifier = modifier
                     .padding(dimensionResource(id = R.dimen.padding_medium))
                     .weight(1f)
@@ -161,7 +168,6 @@ fun TileDetails(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     selectedDate: MutableState<String>,
-    onValueChange: (ItemDetails1) -> Unit = {}
 ){
 Card(
 modifier = modifier,
@@ -281,6 +287,6 @@ fun AttendancePreview() {
             itemDetails1 = ItemDetails1( 1,"Electronics", "EEPC10","14/23/42",true),
             true
         ),
-            onAddClick ={}, selectedDate =remember { mutableStateOf("") } )
+            onAddClick ={}, selectedDate =remember { mutableStateOf("") } , onItemValueChange = {})
     }
 }

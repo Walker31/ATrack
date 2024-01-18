@@ -125,11 +125,14 @@ private fun ItemDetailsBody(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     Column(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
+        val item = itemDetailsUiState.itemDetails.toItem()
+
         ItemDetails(
             item = itemDetailsUiState.itemDetails.toItem(),
             modifier = Modifier.fillMaxWidth()
@@ -160,6 +163,8 @@ private fun ItemDetailsBody(
             )
         }
     }
+
+
 }
 
 
@@ -238,7 +243,7 @@ private fun ItemDetailsRow(
 }
 
 @Composable
-private fun DeleteConfirmationDialog(
+internal fun DeleteConfirmationDialog(
     onDeleteConfirm: () -> Unit, onDeleteCancel: () -> Unit, modifier: Modifier = Modifier
 ) {
     AlertDialog(onDismissRequest = {},

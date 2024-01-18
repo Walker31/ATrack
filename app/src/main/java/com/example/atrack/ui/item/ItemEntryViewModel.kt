@@ -51,9 +51,9 @@ data class ItemDetails(
 
 data class ItemDetails1(
     var id: Int = 0,
-    var subName: String = "Hi",
-    var subCode: String = "H",
-    var date: String="0/00/0000",
+    var subName: String = "",
+    var subCode: String = "",
+    var date: String="",
     var attendance: Boolean =false
 )
 

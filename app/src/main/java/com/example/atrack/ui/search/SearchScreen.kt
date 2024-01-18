@@ -29,8 +29,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -56,6 +58,7 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 
 
+
 object SearchDestination : NavigationDestination {
     override val route = "Search"
     override val titleRes = R.string.app_name
@@ -66,13 +69,19 @@ object SearchDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = viewModel(factory = AppViewModelProvider.Factory)
+
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val selectedDate = remember { mutableStateOf("") }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.clearData()
+        }
+    }
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -174,12 +183,15 @@ fun SearchBody(
 fun SearchList(itemList: List<AttendanceTrack>, modifier: Modifier = Modifier)
 {
     LazyColumn(modifier = modifier) {
-        items(items=itemList,key= {it.date }) {
+        items(items=itemList) {
                 item ->
-            SearchItem(item = item,
-                modifier= modifier
-                    .padding(dimensionResource(id = R.dimen.padding_small))
-            )
+            key(item.date) {
+                SearchItem(
+                    item = item,
+                    modifier = modifier
+                        .padding(dimensionResource(id = R.dimen.padding_small))
+                )
+            }
         }
     }
 }

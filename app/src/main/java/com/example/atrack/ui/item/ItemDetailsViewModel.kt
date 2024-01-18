@@ -33,7 +33,7 @@ class ItemDetailsViewModel(
                 val percent = if (count != 0) (present.toFloat() / count.toFloat()) * 100f else 0f
 
                 itemsRepository.updateSubject(count,present,percent,item.subName)
-                println("Count: $count, Present: $present,Percent: $percent")
+
 
                 ItemDetailsUiState(item.toItemDetails())
 

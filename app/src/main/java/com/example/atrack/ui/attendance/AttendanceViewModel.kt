@@ -1,15 +1,11 @@
 package com.example.atrack.ui.attendance
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.atrack.data.SubjectsRepository
 import com.example.atrack.ui.item.ItemDetails
 import com.example.atrack.ui.item.ItemDetails1
-import com.example.atrack.ui.item.ItemUiState
 import com.example.atrack.ui.item.toItem1
 import com.example.atrack.ui.item.toItemDetails
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,7 +19,6 @@ class AttendanceViewModel(
     private val itemsRepository: SubjectsRepository
 ) : ViewModel() {
 
-    private var itemUiState by mutableStateOf(ItemUiState())
     private val itemId: Int = checkNotNull(savedStateHandle[AttendanceDestination.itemIdArg])
     private val itemDetails1 = ItemDetails1()
 
@@ -45,7 +40,7 @@ class AttendanceViewModel(
         itemDetails1.attendance=attendance
         itemDetails1.date=date
 
-        if(validateInput())
+        if(validateInput(date))
         try {
             itemsRepository.insertDate(itemDetails1.toItem1())
             println("Updated ItemDetails: $itemDetails1")
@@ -53,11 +48,8 @@ class AttendanceViewModel(
             println("Error updating attendance: $e")
         }
     }
-
-    private fun validateInput(uiState: ItemDetails1 = itemUiState.itemDetails1): Boolean {
-        return with(uiState) {
-            date.isNotBlank()
-        }
+    internal fun validateInput(date:String): Boolean {
+            return date.isNotBlank()
     }
 
     companion object {
@@ -68,5 +60,5 @@ class AttendanceViewModel(
 data class AttendanceUiState(
     val itemDetails: ItemDetails = ItemDetails(),
     val itemDetails1: ItemDetails1 =ItemDetails1(),
-    val isEntryValid: Boolean = true
+    val isEntryValid: Boolean = false
 )

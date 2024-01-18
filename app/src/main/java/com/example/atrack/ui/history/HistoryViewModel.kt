@@ -32,6 +32,10 @@ class HistoryViewModel(
         return itemsRepository.getHistory(subName = itemDetails.subName)
     }
 
+    suspend fun delete(subName: String, date:String){
+        itemsRepository.deleteHistory(subName,date)
+    }
+
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
     }

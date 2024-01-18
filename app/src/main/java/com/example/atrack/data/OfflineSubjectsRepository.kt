@@ -21,6 +21,7 @@ class OfflineSubjectsRepository(private val itemDao: SubjectDao): SubjectsReposi
 
     override suspend fun insertDate(item: AttendanceTrack) = itemDao.insertDate(item)
 
+    override suspend fun deleteHistory(subName: String, date: String) =itemDao.deleteHistory(subName,date)
     override suspend fun delete(subName: String) =itemDao.delete(subName)
 
     override suspend fun deleteItem(item: Subject) = itemDao.deleteItem(item)
@@ -29,5 +30,5 @@ class OfflineSubjectsRepository(private val itemDao: SubjectDao): SubjectsReposi
 
     override suspend fun update(item: AttendanceTrack) = itemDao.updateItem(item)
 
-    override suspend fun updateSubject(nTotal: Int,nPresent:Int,percent:Float, subName: String) = itemDao.updateSubject(nTotal, nPresent,percent, subName)
+    override suspend fun updateSubject( nTotal: Int, nPresent: Int,percent:Float, subName: String) = itemDao.updateSubject(nTotal,nPresent,percent, subName)
 }

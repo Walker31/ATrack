@@ -33,6 +33,7 @@ class ItemEditViewModel(
     suspend fun updateItem() {
         if (validateInput(itemUiState.itemDetails)) {
             itemsRepository.updateItem(itemUiState.itemDetails.toItem())
+            itemsRepository.update(itemUiState.itemDetails1.toItem1())
         }
     }
 

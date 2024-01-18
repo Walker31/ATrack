@@ -48,6 +48,9 @@ interface SubjectDao{
     @Query (" Delete from AttendanceTrack where subName= :subName")
     suspend fun delete(subName: String)
 
+    @Query (" Delete from AttendanceTrack where subName= :subName and date= :date")
+    suspend fun deleteHistory(subName: String,date: String)
+
     @Query("Update ITEMS set nTotal=:nTotal,nPresent=:nPresent,percent=:percent where subName=:subName")
     suspend fun updateSubject(nTotal: Int,nPresent:Int, percent: Float,subName: String)
 }

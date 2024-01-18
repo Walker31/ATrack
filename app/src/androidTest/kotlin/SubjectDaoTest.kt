@@ -22,8 +22,8 @@ import java.io.IOException
 class SubjectDaoTest {
     private lateinit var itemDao: SubjectDao
     private lateinit var inventoryDatabase: SubjectDatabase
-    private val item1 = Subject(1, "Apples", "10.0", 20,50)
-    private val item2 = Subject(2, "Bananas", "15.0", 97,150)
+    private val item1 = Subject(1, "Apples", "10.0", 20,50,0f)
+    private val item2 = Subject(2, "Bananas", "15.0", 97,150,0f)
     private val item3=AttendanceTrack(2,"Physics","PHIR","14/7/2022",true)
     private val item4=AttendanceTrack(3,"Physics","PHIR","14/7/2022",true)
     private val item5=AttendanceTrack(4,"Physics","PHIR","14/7/2022",true)
@@ -84,8 +84,8 @@ class SubjectDaoTest {
     @Throws(Exception::class)
     fun daoDeleteItems_deletesAllItemsFromDB() = runBlocking {
         addTwoItemsToDb()
-        itemDao.delete(item1)
-        itemDao.delete(item2)
+        itemDao.deleteItem(item1)
+        itemDao.deleteItem(item2)
         val allItems = itemDao.getAllItems().first()
         assertTrue(allItems.isEmpty())
     }
@@ -94,12 +94,12 @@ class SubjectDaoTest {
     @Throws(Exception::class)
     fun daoUpdateItems_updatesItemsInDB() = runBlocking {
         addTwoItemsToDb()
-        itemDao.update(Subject(1, "Apples", "15.0", 25,50))
-        itemDao.update(Subject(2, "Bananas", "5.0", 50,100))
+        itemDao.update(Subject(1, "Apples", "15.0", 25,50,0f))
+        itemDao.update(Subject(2, "Bananas", "5.0", 50,100,0f))
 
         val allItems = itemDao.getAllItems().first()
-        assertEquals(allItems[0], Subject(1, "Apples", "15.0", 25,50))
-        assertEquals(allItems[1], Subject(2, "Bananas", "5.0", 50,100))
+        assertEquals(allItems[0], Subject(1, "Apples", "15.0", 25,50,0f))
+        assertEquals(allItems[1], Subject(2, "Bananas", "5.0", 50,100,0f))
     }
 
     private suspend fun addOneItemToDb() {

@@ -88,7 +88,6 @@ fun TrackNavHost(navController: NavHostController,
                 type = NavType.StringType
             })) {
             HistoryScreen(
-                navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() },
                 itemDetailsUiState = AttendanceUiState()
             )
@@ -99,7 +98,6 @@ fun TrackNavHost(navController: NavHostController,
                 type = NavType.StringType
             })) {
             SearchScreen(
-                navigateBack = { navController.popBackStack()},
                 onNavigateUp = { navController.navigateUp()}
             )
         }

@@ -13,9 +13,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,6 +30,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,9 +48,13 @@ import com.example.atrack.TrackTopAppBar
 import com.example.atrack.data.AttendanceTrack
 import com.example.atrack.ui.AppViewModelProvider
 import com.example.atrack.ui.attendance.AttendanceUiState
+import com.example.atrack.ui.item.DeleteConfirmationDialog
 import com.example.atrack.ui.item.toItem
 import com.example.atrack.ui.navigation.NavigationDestination
 import com.example.atrack.ui.theme.ATrackTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object HistoryDestination : NavigationDestination {
     override val route = "history"
@@ -58,7 +68,6 @@ object HistoryDestination : NavigationDestination {
 @Composable
 fun HistoryScreen(
     itemDetailsUiState: AttendanceUiState,
-    navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HistoryViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -132,14 +141,31 @@ private fun HistoryBody(
 
 @Composable
 private fun HistoryList(
-    itemList: List<AttendanceTrack>, modifier: Modifier = Modifier
+    itemList: List<AttendanceTrack>, modifier: Modifier = Modifier,
+    viewModel: HistoryViewModel = viewModel(factory = AppViewModelProvider.Factory)
+
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
+    fun delete(subName:String,date: String){
+        coroutineScope.launch{
+            withContext(Dispatchers.IO) {
+                viewModel.delete(
+                    subName,date
+                )
+            }
+
+        }
+    }
     LazyColumn(modifier = modifier) {
         items(items=itemList,key= {it.id }) {
                 item ->
             HistoryItem(item = item,
                 modifier= modifier
-                    .padding(dimensionResource(id = R.dimen.padding_small))
+                    .padding(dimensionResource(id = R.dimen.padding_small)),
+                delete={subName, date ->
+                    delete(subName, date)
+                }
             )
         }
     }
@@ -147,8 +173,11 @@ private fun HistoryList(
 
 @Composable
 private fun HistoryItem(
-    item: AttendanceTrack, modifier: Modifier = Modifier
+    item: AttendanceTrack,
+    modifier: Modifier = Modifier,
+    delete: (String,String) -> Unit
 ) {
+    var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
     Card(
         modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -168,6 +197,27 @@ private fun HistoryItem(
                     text = if (item.attendance) "Present" else "Absent",
                     style = MaterialTheme.typography.titleMedium
                 )
+                Spacer(Modifier.weight(0.05f))
+                IconButton(onClick = {deleteConfirmationRequired = true   },
+                        modifier = Modifier.size(20.dp)
+                ) {
+                    Icon(
+                        Icons.Rounded.Delete,
+                        contentDescription = "Delete Attendance Button"
+
+                    )
+                }
+                if (deleteConfirmationRequired) {
+
+                    DeleteConfirmationDialog(
+                        onDeleteConfirm = {
+                            deleteConfirmationRequired = false
+                            delete(item.subName,item.date)
+                        },
+                        onDeleteCancel = { deleteConfirmationRequired = false },
+                        modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
+                    )
+                }
             }
         }
     }
@@ -177,9 +227,10 @@ private fun HistoryItem(
 @Composable
 fun HistoryBodyPreview() {
     ATrackTheme(darkTheme = false) {
-        HistoryBody(listOf(
+        HistoryItem(
             AttendanceTrack(1, "Game", "100.0", "20/3/2023",true),
-            AttendanceTrack(2, "Pen", "200.0", "21/3/2023",true)
-        ))
+            delete = { subName, date ->println("Deleting: $subName on $date") }
+        )
+
     }
 }

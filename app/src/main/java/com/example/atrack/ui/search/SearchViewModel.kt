@@ -1,5 +1,7 @@
 package com.example.atrack.ui.search
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,6 +19,9 @@ class SearchViewModel(
     private val itemsRepository: SubjectsRepository
 ) : ViewModel() {
 
+    private val _searchResult = mutableStateOf<List<AttendanceTrack>?>(null)
+    val searchResult: State<List<AttendanceTrack>?> = _searchResult
+
     private val itemId: String = checkNotNull(savedStateHandle[AttendanceDestination.itemIdArg])
 
     private var _searchUiState: MutableStateFlow<SearchUiState> = MutableStateFlow(SearchUiState())
@@ -30,9 +35,15 @@ class SearchViewModel(
         }
     }
 
+    fun clearData() {
+        _searchResult.value = null
+    }
+
 
     fun searchResult(date: String): List<AttendanceTrack> {
-        return itemsRepository.getAllItemsOnDate(date)
+
+        _searchResult.value = itemsRepository.getAllItemsOnDate(date)
+        return _searchResult.value!!
     }
 
 
