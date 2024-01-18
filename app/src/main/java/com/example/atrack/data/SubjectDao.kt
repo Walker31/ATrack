@@ -53,4 +53,10 @@ interface SubjectDao{
 
     @Query("Update ITEMS set nTotal=:nTotal,nPresent=:nPresent,percent=:percent where subName=:subName")
     suspend fun updateSubject(nTotal: Int,nPresent:Int, percent: Float,subName: String)
+
+    @Query("Update AttendanceTrack set subCode=:newSubCode where subCode=:oldSubCode")
+    suspend fun updateSubCode(newSubCode: String,oldSubCode: String)
+
+    @Query("Update AttendanceTrack set subName=:newSubName where subName=:oldSubName")
+    suspend fun updateSubName(newSubName: String,oldSubName: String)
 }

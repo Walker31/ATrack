@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,8 +22,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.atrack.R
 import com.example.atrack.TrackTopAppBar
@@ -80,7 +78,8 @@ fun ItemEntryBody(
     itemUiState: ItemUiState,
     onItemValueChange: (ItemDetails) -> Unit,
     onSaveClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ItemEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     Column(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
@@ -89,7 +88,9 @@ fun ItemEntryBody(
         ItemInputForm(
             itemDetails = itemUiState.itemDetails,
             onValueChange = onItemValueChange,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            viewModel = viewModel,
+            item=itemUiState.itemDetails
         )
         Button(
             onClick = onSaveClick,
@@ -107,16 +108,22 @@ fun ItemEntryBody(
 fun ItemInputForm(
     itemDetails: ItemDetails,
     modifier: Modifier = Modifier,
-    onValueChange: (ItemDetails) -> Unit = {},
-    enabled: Boolean = true
+    onValueChange: (ItemDetails) -> Unit,
+    enabled: Boolean = true,
+    viewModel: ItemEntryViewModel,
+    item: ItemDetails
 ) {
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
     ) {
         OutlinedTextField(
             value = itemDetails.subName,
-            onValueChange = { onValueChange(itemDetails.copy(subName = it)) },
+            onValueChange = {
+                val limitedText = it.take(30)
+                onValueChange(itemDetails.copy(subName = limitedText))
+                viewModel.viewModelScope.launch {viewModel.updateSubName(newSubName = limitedText, oldSubName = item.subName)} },
             label = { Text(stringResource(R.string.SubName)) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -128,11 +135,15 @@ fun ItemInputForm(
                     contentDescription="")} ,
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
-            singleLine = true
+            singleLine = true,
+            maxLines = 2
         )
         OutlinedTextField(
             value = itemDetails.subCode,
-            onValueChange = { onValueChange(itemDetails.copy(subCode = it)) },
+            onValueChange = { onValueChange(itemDetails.copy(subCode = it))
+                viewModel.viewModelScope.launch {viewModel.updateSubCode(newSubCode=it, oldSubCode = item.subCode)
+                }
+                            },
             label = { Text(stringResource(R.string.SubCode)) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -142,23 +153,6 @@ fun ItemInputForm(
             leadingIcon = {
                 Icon( imageVector=Icons.Filled.Send,
                           contentDescription="")} ,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )
-        OutlinedTextField(
-            value = itemDetails.nPresent,
-            onValueChange = { onValueChange(itemDetails.copy(nPresent = it)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            label = { Text(stringResource(R.string.nPresent)) },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-            ),
-            leadingIcon = {
-                Icon( imageVector=Icons.Rounded.Place,
-                    contentDescription="")} ,
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
@@ -177,7 +171,8 @@ fun ItemInputForm(
 private fun ItemEntryScreenPreview() {
     ATrackTheme {
         ItemEntryBody(itemUiState = ItemUiState(
-            ItemDetails(0,"Phy","PHIR12","5","40")
-        ), onItemValueChange = {}, onSaveClick = {})
+            ItemDetails(0,"Phy","PHIR12","5","40"),true,
+            ItemDetails1(0,"Phy","PHIR12","12/1/24",false)
+        ), onSaveClick = {},onItemValueChange = {},)
     }
 }

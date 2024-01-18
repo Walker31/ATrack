@@ -3,6 +3,7 @@ package com.example.atrack.ui.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -170,10 +171,12 @@ private fun InventoryItem(
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = item.subName,
-                    style = MaterialTheme.typography.titleLarge,
-                )
+                Box{
+                    Text(
+                        text = item.subName,
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                }
                 Spacer(Modifier.weight(1f))
                 Text(
                     text = item.percent.toString()+" %",

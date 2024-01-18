@@ -42,7 +42,7 @@ class ItemEditViewModel(
             ItemUiState(itemDetails = itemDetails, isEntryValid = validateInput(itemDetails))
     }
 
-    private fun validateInput(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
+    private fun validateInput(uiState: ItemDetails = itemUiState.itemDetails,uiState1: ItemDetails1=itemUiState.itemDetails1): Boolean {
         return with(uiState) {
             subName.isNotBlank() && nPresent.isNotBlank() && nTotal.isNotBlank()
         }

@@ -7,6 +7,7 @@ class OfflineSubjectsRepository(private val itemDao: SubjectDao): SubjectsReposi
 
     override fun getHistory(subName: String): Flow<List<AttendanceTrack>> = itemDao.getHistory(subName)
 
+
     override fun getItemStream(id: Int): Flow<Subject?> = itemDao.getItem(id)
 
     override fun getAllItemsOnDate(date: String): List<AttendanceTrack> =itemDao.getAllItemsOnDate(date)
@@ -22,6 +23,7 @@ class OfflineSubjectsRepository(private val itemDao: SubjectDao): SubjectsReposi
     override suspend fun insertDate(item: AttendanceTrack) = itemDao.insertDate(item)
 
     override suspend fun deleteHistory(subName: String, date: String) =itemDao.deleteHistory(subName,date)
+
     override suspend fun delete(subName: String) =itemDao.delete(subName)
 
     override suspend fun deleteItem(item: Subject) = itemDao.deleteItem(item)
@@ -30,5 +32,9 @@ class OfflineSubjectsRepository(private val itemDao: SubjectDao): SubjectsReposi
 
     override suspend fun update(item: AttendanceTrack) = itemDao.updateItem(item)
 
-    override suspend fun updateSubject( nTotal: Int, nPresent: Int,percent:Float, subName: String) = itemDao.updateSubject(nTotal,nPresent,percent, subName)
+    override suspend fun updateSubCode(newSubCode: String, oldSubCode: String)=itemDao.updateSubCode(newSubCode,oldSubCode)
+
+    override suspend fun updateSubName(newSubName: String, oldSubName: String)=itemDao.updateSubName(newSubName,oldSubName)
+
+    override suspend fun updateSubject( nPresent: Int, nTotal: Int,percent:Float, subName: String) = itemDao.updateSubject(nPresent,nTotal,percent, subName)
 }
