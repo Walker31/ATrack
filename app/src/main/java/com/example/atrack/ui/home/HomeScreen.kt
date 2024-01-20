@@ -117,19 +117,19 @@ private fun HomeBody(
         modifier = modifier
     ) {
         if (itemList.isEmpty()) {
-                Image(
-                    painter = painterResource(id = R.drawable.sad_face),
-                    contentDescription = "Sad Face",
-                    modifier = modifier
-                        .size(20.dp)
-                )
-                Text(
-                    text = stringResource(R.string.no_item_description),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
+            Image(
+                painter = painterResource(id = R.drawable.sad_face),
+                contentDescription = "Sad Face",
+                modifier = modifier
+                    .size(20.dp)
+            )
+            Text(
+                text = stringResource(R.string.no_item_description),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
         }
         else {
             InventoryList(
@@ -138,7 +138,7 @@ private fun HomeBody(
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             )
         }
-        }
+    }
 }
 
 @Composable
@@ -147,7 +147,7 @@ private fun InventoryList(
 ) {
     LazyColumn(modifier = modifier) {
         items(items=itemList,key= {it.id }) {
-            item ->
+                item ->
             InventoryItem(item = item,
                 modifier= modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))

@@ -3,7 +3,9 @@ package com.example.atrack.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+
+
+@Entity()
 data class AttendanceTrack (
     @PrimaryKey(autoGenerate=true)
     var id: Int,
@@ -12,3 +14,8 @@ data class AttendanceTrack (
     var date: String,
     var attendance: Boolean
 )
+
+
+
+
+

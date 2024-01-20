@@ -21,7 +21,7 @@ interface SubjectsRepository{
     suspend fun insertItem(item: Subject)
 
     suspend fun delete(subName: String)
-    
+
     suspend fun deleteHistory(subName: String,date: String)
 
     suspend fun update(item:AttendanceTrack)

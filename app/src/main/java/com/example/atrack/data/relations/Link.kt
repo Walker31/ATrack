@@ -1,17 +1,12 @@
 package com.example.atrack.data.relations
 
-import androidx.room.Embedded
-import androidx.room.Relation
+import androidx.room.Entity
+import androidx.room.ForeignKey
 import com.example.atrack.data.AttendanceTrack
-import com.example.atrack.data.Subject
+
+
 
 data class Link(
-
-    @Embedded val subject: Subject,
-    @Relation(
-        parentColumn="subName",
-        entityColumn = "subName"
-    )
-
-    val attendanceTrack: AttendanceTrack
+    var id: Int=0,
+    var subName: String
 )

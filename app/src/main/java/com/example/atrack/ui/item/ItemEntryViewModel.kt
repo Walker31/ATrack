@@ -20,13 +20,13 @@ class ItemEntryViewModel(private val itemsRepository: SubjectsRepository) : View
 
     suspend fun updateSubCode(newSubCode: String,oldSubCode: String){
         println("Function Executed: $newSubCode, $oldSubCode")
-            itemsRepository.updateSubCode(newSubCode, oldSubCode )
+        itemsRepository.updateSubCode(newSubCode, oldSubCode )
     }
 
 
     suspend fun updateSubName(newSubName: String,oldSubName: String){
         println("Function Executed: $newSubName, $oldSubName")
-            itemsRepository.updateSubName(newSubName, oldSubName )
+        itemsRepository.updateSubName(newSubName, oldSubName )
     }
 
     suspend fun saveItem() {

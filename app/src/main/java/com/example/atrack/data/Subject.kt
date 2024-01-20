@@ -3,7 +3,9 @@ package com.example.atrack.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "items")
+
+@Entity(tableName = "items"
+)
 data class Subject(
     @PrimaryKey(autoGenerate = true)
     var id: Int,

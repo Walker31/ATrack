@@ -143,7 +143,7 @@ fun ItemInputForm(
             onValueChange = { onValueChange(itemDetails.copy(subCode = it))
                 viewModel.viewModelScope.launch {viewModel.updateSubCode(newSubCode=it, oldSubCode = item.subCode)
                 }
-                            },
+            },
             label = { Text(stringResource(R.string.SubCode)) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -152,7 +152,7 @@ fun ItemInputForm(
             ),
             leadingIcon = {
                 Icon( imageVector=Icons.Filled.Send,
-                          contentDescription="")} ,
+                    contentDescription="")} ,
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true

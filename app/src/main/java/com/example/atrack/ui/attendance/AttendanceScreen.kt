@@ -237,6 +237,7 @@ fun DatePickerTextField(
     fun showDatePicker() {
         val calendar = Calendar.getInstance()
 
+
         datePickerDialog.value = DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
@@ -245,8 +246,9 @@ fun DatePickerTextField(
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+            calendar.get(Calendar.DAY_OF_MONTH),
         )
+        datePickerDialog.value?.datePicker?.maxDate = System.currentTimeMillis()
 
         datePickerDialog.value?.show()
     }
