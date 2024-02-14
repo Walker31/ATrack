@@ -3,40 +3,13 @@ package com.example.atrack.ui.search
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DateRange
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -45,7 +18,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.atrack.R
@@ -55,9 +27,7 @@ import com.example.atrack.ui.AppViewModelProvider
 import com.example.atrack.ui.navigation.NavigationDestination
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Calendar
-
-
+import java.util.*
 
 object SearchDestination : NavigationDestination {
     override val route = "Search"
@@ -99,6 +69,7 @@ fun SearchScreen(
             modifier = modifier
                 .padding(innerPadding),
             selectedDate = selectedDate,
+            viewModel = viewModel
         )
     }
 }
@@ -108,7 +79,7 @@ fun SearchScreen(
 fun SearchUI(
     modifier: Modifier = Modifier,
     selectedDate: MutableState<String>,
-    viewModel: SearchViewModel =viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: SearchViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
     Column(
@@ -139,11 +110,10 @@ fun SearchUI(
         if (searchResult != null) {
             SearchBody(itemList = searchResult!!)
         } else {
-            Text("Search in Progress......",modifier = Modifier.padding(16.dp))
+            Text("Search in Progress......", modifier = Modifier.padding(16.dp))
         }
     }
 }
-
 
 @Composable
 fun SearchBody(
@@ -226,7 +196,6 @@ fun SearchItem(item: AttendanceTrack, modifier: Modifier = Modifier){
 fun datePickerTextField(
     selectedDate: MutableState<String>
 ): String {
-
     val datePickerDialog = remember { mutableStateOf<DatePickerDialog?>(null) }
     val context = LocalContext.current
 
@@ -236,65 +205,36 @@ fun datePickerTextField(
         datePickerDialog.value = DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
-                val formattedDate="$dayOfMonth/${month+1}/$year"
-                selectedDate.value = formattedDate
-
+                val formattedDate = "$dayOfMonth/${month + 1}/$year"
+                selectedDate.value = formattedDate // Only update when new date is selected
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         )
+        datePickerDialog.value?.datePicker?.maxDate = System.currentTimeMillis()
 
         datePickerDialog.value?.show()
     }
-        OutlinedTextField(
-            value = selectedDate.value,
-            onValueChange = {},
-            label = { Text(stringResource(R.string.date)) },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
-                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer
-            ),
-            trailingIcon = {
-                IconButton(onClick = {showDatePicker()}) {
-                    Icon(
-                        Icons.Rounded.DateRange,
-                        contentDescription = "Localized description"
-                    )
-                }
-            },
-            singleLine = true
-        )
+
+    OutlinedTextField(
+        value = selectedDate.value,
+        onValueChange = {}, // Remove the onValueChange callback
+        label = { Text(stringResource(R.string.date)) },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+            unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer
+        ),
+        trailingIcon = {
+            IconButton(onClick = { showDatePicker() }) {
+                Icon(
+                    Icons.Rounded.DateRange,
+                    contentDescription = "Localized description"
+                )
+            }
+        },
+        singleLine = true
+    )
     return selectedDate.value
 }
-/*
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun SearchPreview() {
-    ATrackTheme(darkTheme = true) {
-        SearchBody(listOf(
-            AttendanceTrack(1, "Game", "100.0", "0",false),
-            AttendanceTrack(2, "Pen", "200.0", "30",true)
-        ),
-            selectedDate ="0"
-        )
-    }
-}
-*/
-
-@SuppressLint("UnrememberedMutableState")
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun TextPreview() {
-    val viewModel: SearchViewModel = viewModel()
-    val selectedDate = remember { mutableStateOf("0") }
-
-    SearchUI(
-        selectedDate = selectedDate,
-        viewModel = viewModel
-    )
-}
-
-

@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import typography
 
 
 private val LightColorScheme = lightColorScheme(
@@ -106,7 +107,7 @@ fun ATrackTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = typography,
         content = content,
         shapes = Shapes,
     )

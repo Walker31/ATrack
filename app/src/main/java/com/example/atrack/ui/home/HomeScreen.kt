@@ -1,18 +1,19 @@
 package com.example.atrack.ui.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
@@ -30,6 +31,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -162,32 +165,60 @@ private fun InventoryItem(
     item: Subject, modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier, elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        modifier = modifier,
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box{
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     Text(
                         text = item.subName,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = item.subCode,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(bottom = 4.dp)
                     )
                 }
-                Spacer(Modifier.weight(1f))
-                Text(
-                    text = item.percent.toString()+" %",
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Box(
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, getColorForPercentage(item.percent), CircleShape),
+                    contentAlignment= Alignment.Center
+                ) {
+                    Text(
+                        text = String.format("%.2f", item.percent),
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(4.dp)
+                    )
+                }
             }
-            Text(
-                text = item.subCode,
-                style = MaterialTheme.typography.titleMedium
-            )
         }
+    }
+}
+
+
+
+@Composable
+private fun getColorForPercentage(percent: Float): Color {
+    // Add your logic here to determine the color based on the percentage
+    return when {
+        percent >= 80 -> Color.Green
+        percent >= 75 -> Color.Yellow
+        else -> Color.Red
     }
 }
 
@@ -196,8 +227,8 @@ private fun InventoryItem(
 fun HomeBodyPreview() {
     ATrackTheme(darkTheme = true) {
         HomeBody(listOf(
-            Subject(1, "Game", "100.0", 20,50,0f),
-            Subject(2, "Pen", "200.0", 30,40,0f)
+            Subject(1, "Game", "EPEE37", 20,50,100f),
+            Subject(2, "Pen", "EEPC22", 30,40,0f)
         ), onItemClick = {})
     }
 }

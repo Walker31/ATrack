@@ -1,5 +1,6 @@
 package com.example.atrack.ui.attendance
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -126,16 +127,14 @@ fun AttendanceTile(
     val enabled=viewModel.validateInput(selectedDate.value)
 
     Column(
-        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium))
-    ,        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
     ) {
-
         TileDetails(
             item = itemUiState.itemDetails.toItem(),
             selectedDate=selectedDate,
             modifier = Modifier.fillMaxWidth()
         )
-
         Row{
             Button(
                 onClick = { onAddClick(true) },
@@ -225,6 +224,7 @@ private fun ItemDetailsRow(
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun DatePickerTextField(
     selectedDate: MutableState<String>,
@@ -247,11 +247,10 @@ fun DatePickerTextField(
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         )
+        datePickerDialog.value?.datePicker?.maxDate = System.currentTimeMillis()
 
         datePickerDialog.value?.show()
     }
-
-
     Column {
         OutlinedTextField(
             value = selectedDate.value,
@@ -263,16 +262,18 @@ fun DatePickerTextField(
                 disabledContainerColor = MaterialTheme.colorScheme.primaryContainer
             ),
             trailingIcon = {
-                IconButton(onClick = {showDatePicker()}) {
+                IconButton(onClick = { showDatePicker() }) {
                     Icon(
                         Icons.Rounded.DateRange,
                         contentDescription = "Localized description"
                     )
                 }
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             enabled = enabled,
-            singleLine = true
+            singleLine = true,
+
         )
     }
 }
